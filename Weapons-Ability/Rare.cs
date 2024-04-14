@@ -27,15 +27,15 @@ using Il2CppAssets.Scripts.Models.Towers.Behaviors.Attack;
 
 namespace AncientMonkey.Weapons
 {
-    public class LaserBlasts : WeaponTemplate
+    public class SuperMonkey : WeaponTemplate
     {
         public override int SandboxIndex => 2;
         public override Rarity WeaponRarity => Rarity.Rare;
-        public override string Icon => VanillaSprites.LaserBlastUpgradeIcon;
-        public override string WeaponName => "Laser Blasts";
+        public override string Icon => VanillaSprites.EpicRangeUpgradeIcon;
+        public override string WeaponName => "Super Monkey";
         public override void EditTower(Tower tower)
         {
-            var wpn = Game.instance.model.GetTowerFromId("SuperMonkey-100").GetAttackModel().Duplicate();
+            var wpn = Game.instance.model.GetTowerFromId("SuperMonkey").GetAttackModel().Duplicate();
             wpn.range = tower.towerModel.range;
             var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
             towerModel.AddBehavior(wpn);
@@ -431,6 +431,54 @@ namespace AncientMonkey.Weapons
             var wpn = Game.instance.model.GetTowerFromId("TackShooter-230").GetAttackModel().Duplicate();
             var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
             wpn.range = towerModel.range;
+            towerModel.AddBehavior(wpn);
+            tower.UpdateRootModel(towerModel);
+        }
+    }
+    public class Obyn : WeaponTemplate
+    {
+        public override int SandboxIndex => 2;
+        public override Rarity WeaponRarity => Rarity.Rare;
+        public override string Icon => VanillaSprites.ObynGreenFootIcon;
+        public override string WeaponName => "Obyn";
+        public override bool IsLead => true;
+        public override void EditTower(Tower tower)
+        {
+            var wpn = Game.instance.model.GetTowerFromId("ObynGreenfoot").GetAttackModel().Duplicate();
+            wpn.range = tower.towerModel.range;
+            var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
+            towerModel.AddBehavior(wpn);
+            tower.UpdateRootModel(towerModel);
+        }
+    }
+    public class Gwendolin : WeaponTemplate
+    {
+        public override int SandboxIndex => 2;
+        public override Rarity WeaponRarity => Rarity.Rare;
+        public override string Icon => VanillaSprites.GwendolinIcon;
+        public override string WeaponName => "Gwendolin";
+        public override bool IsLead => true;
+        public override void EditTower(Tower tower)
+        {
+            var wpn = Game.instance.model.GetTowerFromId("Gwendolin").GetAttackModel().Duplicate();
+            wpn.range = tower.towerModel.range;
+            var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
+            towerModel.AddBehavior(wpn);
+            tower.UpdateRootModel(towerModel);
+        }
+    }
+    public class Sauda : WeaponTemplate
+    {
+        public override int SandboxIndex => 2;
+        public override Rarity WeaponRarity => Rarity.Rare;
+        public override string Icon => VanillaSprites.SaudaIcon;
+        public override string WeaponName => "Sauda";
+        public override bool IsCamo => true;
+        public override void EditTower(Tower tower)
+        {
+            var wpn = Game.instance.model.GetTowerFromId("Sauda").GetAttackModel().Duplicate();
+            wpn.range = tower.towerModel.range;
+            var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
             towerModel.AddBehavior(wpn);
             tower.UpdateRootModel(towerModel);
         }

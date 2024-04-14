@@ -80,6 +80,8 @@ using UnityEngine.UIElements;
 using Il2CppAssets.Scripts.Unity.Towers.Upgrades;
 using Il2CppAssets.Scripts.Simulation.Towers.Behaviors.Abilities;
 using Il2CppAssets.Scripts.Unity.Gamepad;
+using AncientMonkey.Challenge;
+using System.Collections.Generic;
 
 [assembly: MelonInfo(typeof(AncientMonkey.AncientMonkey), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -93,27 +95,6 @@ public class AncientMonkey : BloonsTD6Mod
         requiresRestart = true,
         icon = VanillaSprites.SandboxBtn,
         description = "Enable Sandbox Mode"
-    };
-    public static readonly ModSettingInt NewWeaponStartingSlotCount = new(3)
-    {
-        min = 1,
-        max = 5,
-        slider = true,
-        description = "Starting New Weapon Slot Count."
-    };
-    public static readonly ModSettingInt StrongerWeaponStartingSlotCount = new(3)
-    {
-        min = 1,
-        max = 5,
-        slider = true,
-        description = "Starting Stronger Weapon Card Slot Count."
-    };
-    public static readonly ModSettingInt NewnAbilityStartingSlotCount = new(1)
-    {
-        min = 1,
-        max = 5,
-        slider = true,
-        description = "Starting New Ability Slot Count."
     };
 
 
@@ -144,9 +125,9 @@ public class AncientMonkey : BloonsTD6Mod
     public float moneyBoostSandbox = 1;
     public int damageBoostSandbox = 0;
     public int pierceBoostSandbox = 0;
-    public int newWeaponSlot = NewWeaponStartingSlotCount;
-    public int strongWeaponSlot = StrongerWeaponStartingSlotCount;
-    public int abilitySlot = NewnAbilityStartingSlotCount;
+    public int newWeaponSlot = 3;
+    public int strongWeaponSlot = 3;
+    public int abilitySlot = 1;
     public int extraWeaponSlotLevel = 0;
     public int extraWeaponSlotLevelMax = 1;
     public int extraWeaponSlotCost = 80000;
@@ -158,11 +139,19 @@ public class AncientMonkey : BloonsTD6Mod
     public int ExtraAbilitySlotCost = 160000;
     public int ExtraLuckLevel = 0;
     public int ExtraLuckMax = 20;
+    public float UpgradeCost = 125000;
     public float ExtraLuckCost = 250;
     public WeaponTemplate.Rarity minNewWeaponRarity = WeaponTemplate.Rarity.Common;
     public WeaponTemplate.Rarity maxNewWeaponRarity = WeaponTemplate.Rarity.Exotic;
     public WeaponTemplate.Rarity minStrongWeaponRarity = WeaponTemplate.Rarity.Common;
     public WeaponTemplate.Rarity maxStrongWeaponRarity = WeaponTemplate.Rarity.Exotic;
+
+    public ChallengeTemplate? activeChallenge = new None(); 
+    public ChallengeTemplate selectedChallenge
+    {
+        get { return activeChallenge; }
+        set { activeChallenge = value; }
+    }
 
     public override void OnApplicationStart()
     {
@@ -212,7 +201,7 @@ public class AncientMonkey : BloonsTD6Mod
     
     public void Reset()
     {
-        newWeaponCost = 250;
+        newWeaponCost = 325 * mod.selectedChallenge.NewWeaponCostMult;
         rareChance = 90;
         epicChance = 100;
         rareStrongChance = 90;
@@ -221,31 +210,32 @@ public class AncientMonkey : BloonsTD6Mod
         legendaryChance = 100;
         exoticChance = 100;
         exoticStrongChance = 100;
-        baseNewWeaponCost = 250;
-        strongerWeaponCost = 500;
-        baseStrongerWeaponCost = 500;
-        newAbilityCost = 6500;
-        baseNewAbilityCost = 1750;
+        baseNewWeaponCost = 250 * mod.selectedChallenge.NewWeaponCostMult;
+        strongerWeaponCost = 500 * mod.selectedChallenge.StrongerWeaponCostMult;
+        baseStrongerWeaponCost = 500 * mod.selectedChallenge.StrongerWeaponCostMult;
+        newAbilityCost = 6500 * mod.selectedChallenge.AbilityWeaponCostMult;
+        baseNewAbilityCost = 1750 * mod.selectedChallenge.AbilityWeaponCostMult;
         upgradeOpen = false;
         selectingWeaponOpen = false;
         mib = false;
         panelOpen = false;
         level = 0;
-        newWeaponSlot = NewWeaponStartingSlotCount;
-        strongWeaponSlot = StrongerWeaponStartingSlotCount;
-        abilitySlot = NewnAbilityStartingSlotCount;
+        newWeaponSlot = 3;
+        strongWeaponSlot = 3;
+        abilitySlot = 1;
         extraWeaponSlotLevel = 0;
-        extraWeaponSlotCost = 80000;
+        extraWeaponSlotCost = 50000;
         strongExtraWeaponSlotLevel = 0;
-        strongExtraWeaponSlotCost = 100000;
+        strongExtraWeaponSlotCost = 65000;
         ExtraAbilitySlotLevel = 0;
-        ExtraAbilitySlotCost = 160000;
-        ExtraLuckCost = 250;
+        ExtraAbilitySlotCost = 100000;
+        ExtraLuckCost = 700 * mod.selectedChallenge.LuckCostMult;
         ExtraLuckLevel = 0;
-        minNewWeaponRarity = WeaponTemplate.Rarity.Common;
-        maxNewWeaponRarity = WeaponTemplate.Rarity.Exotic;
-        minStrongWeaponRarity = WeaponTemplate.Rarity.Common;
-        maxStrongWeaponRarity = WeaponTemplate.Rarity.Exotic;
+        minNewWeaponRarity = mod.selectedChallenge.MinNURarity;
+        maxNewWeaponRarity = mod.selectedChallenge.MaxNURarity;
+        minStrongWeaponRarity = mod.selectedChallenge.MinNURarity;
+        maxStrongWeaponRarity = mod.selectedChallenge.MaxNURarity;
+        UpgradeCost = 125000 * mod.selectedChallenge.UpgradeCostMult;
     }
     public override void OnGameModelLoaded(GameModel model)
     {
@@ -346,6 +336,7 @@ public class AncientMonkey : BloonsTD6Mod
             {
                 Destroy(gameObject);
             }
+       
             foreach (var weapon in ModContent.GetContent<WeaponTemplate>().OrderByDescending(c => c.mod == mod))
             {
                 if(weapon.WeaponName == Weapon)
@@ -444,7 +435,8 @@ public class AncientMonkey : BloonsTD6Mod
             ModHelperPanel panel = rect.gameObject.AddModHelperPanel(new Info("Panel_", 2200, 1500, 2500, 1850, new UnityEngine.Vector2()), VanillaSprites.MainBGPanelBlue);
             panel.transform.DestroyAllChildren();            
             ModHelperScrollPanel scrollPanel = panel.AddScrollPanel(new Info("scrollPanel", 0, 0, 2500, 1850), RectTransform.Axis.Vertical, VanillaSprites.MainBGPanelBlue, 15, 50);
-            ModHelperButton exit = panel.AddButton(new Info("exit", 1200, 900, 135, 135), VanillaSprites.RedBtn, new System.Action(() => { panel.DeleteObject(); tower.SetSelectionBlocked(false); if (mod.upgradeOpen == true){CreateUpgradeMenu(rect, tower);  }
+            ModHelperButton exit = panel.AddButton(new Info("exit", 1200, 900, 135, 135), VanillaSprites.RedBtn, new System.Action(() => {
+                tower.SetSelectionBlocked(false); panel.DeleteObject(); if (mod.upgradeOpen == true){CreateUpgradeMenu(rect, tower);  }
             }));
             ModHelperText x = exit.AddText(new Info("x", 0, 0, 700, 160), "X", 80);
 
@@ -862,7 +854,7 @@ public class AncientMonkey : BloonsTD6Mod
                     damageBoost = rnd.Next(2, 7);
                     pierceBoost = rnd.Next(2, 7);
                     rangeBoost = rnd.Next(0, 15);
-                    attackSpeedBoost = rnd.Next(85, 1001);
+                    attackSpeedBoost = rnd.Next(85, 101);
                     moneyBoost = rnd.Next(0, 15);
                     sprite = VanillaSprites.MainBGPanelYellow;
                 }
@@ -1084,7 +1076,7 @@ public class AncientMonkey : BloonsTD6Mod
 
             ModHelperScrollPanel scrollPanel = panel.AddScrollPanel(new Info("scrollPanel", 0, 0, 2500, 1850), RectTransform.Axis.Vertical, VanillaSprites.MainBGPanelBlue, 15, 50);
             ModHelperButton exit = panel.AddButton(new Info("exit", 1200, 900, 135, 135), VanillaSprites.RedBtn, new System.Action(() => {
-                panel.DeleteObject(); tower.SetSelectionBlocked(false);
+                tower.SetSelectionBlocked(false); panel.DeleteObject(); 
             }));
             ModHelperText x = exit.AddText(new Info("x", 0, 0, 700, 160), "X", 80);
             foreach (var ability in ModContent.GetContent<AbilityTemplate>())
@@ -1188,7 +1180,7 @@ public class AncientMonkey : BloonsTD6Mod
             ModHelperText text8 = panel.AddText(new Info("text8", 0, -200, 2500, 180), "-New Ability Cost Decreased", 75);
             ModHelperText text9 = panel.AddText(new Info("text9", 0, -300, 2500, 180), "-Keep Everything", 75);
             ModHelperButton upgrade1 = panel.AddButton(new Info("upgrade1", 350, -800, 500, 160), VanillaSprites.GreenBtnLong, new System.Action(() => upgradeUi.Upgrade1(tower)));
-            ModHelperText upgrade1Buy = upgrade1.AddText(new Info("upgrade1Buy", 0, 0, 700, 160), "Upgrade ($125K)", 70);
+            ModHelperText upgrade1Buy = upgrade1.AddText(new Info("upgrade1Buy", 0, 0, 700, 160), "Upgrade ($" + mod.UpgradeCost /1000 + "K)", 70);
             ModHelperButton cancel = panel.AddButton(new Info("cancel", -350, -800, 500, 160), VanillaSprites.RedBtnLong, new System.Action(() => upgradeUi.Cancel(tower)));
             ModHelperText cancelText = cancel.AddText(new Info("cancelText", 0, 0, 700, 160), "Cancel", 70);
         }
@@ -1290,7 +1282,7 @@ public class AncientMonkey : BloonsTD6Mod
             }
             else
             {
-                ModHelperButton upgradeExtraLevel = panel.AddButton(new Info("upgradeExtraLevel", -980, -50, 525, 145), VanillaSprites.GreenBtnLong, new System.Action(() => { if (game.GetCash() >= mod.ExtraLuckCost) { game.AddCash(mod.ExtraLuckCost * -1); mod.ExtraLuckLevel += 1; mod.ExtraLuckCost *= 1.45f; ; panel.DeleteObject(); ExtraPanel(tower); } }));
+                ModHelperButton upgradeExtraLevel = panel.AddButton(new Info("upgradeExtraLevel", -980, -50, 525, 145), VanillaSprites.GreenBtnLong, new System.Action(() => { if (game.GetCash() >= mod.ExtraLuckCost) { game.AddCash(mod.ExtraLuckCost * -1); mod.ExtraLuckLevel += 1; mod.ExtraLuckCost *= 1.35f; ; panel.DeleteObject(); ExtraPanel(tower); } }));
                 ModHelperText upgradeExtraLevelText = upgradeExtraLevel.AddText(new Info("upgradeExtraLevelText", 0, 0, 550, 150), "Extra Luck : $" + Mathf.Round(mod.ExtraLuckCost), 50);
             }
 
@@ -1300,14 +1292,14 @@ public class AncientMonkey : BloonsTD6Mod
         public void Upgrade1(Tower tower)
         {
             InGame game = InGame.instance;
-            if (game.GetCash() >= 125000)
+            if (game.GetCash() >= mod.UpgradeCost)
             {
-                game.AddCash(-125000);
+                game.AddCash(-mod.UpgradeCost);
                 
                 RectTransform rect = game.uiRect;
             
-                mod.newWeaponCost = 450;
-                mod.baseNewWeaponCost = 350;
+                mod.newWeaponCost = 450 * mod.selectedChallenge.NewWeaponCostMult;
+                mod.baseNewWeaponCost = 350 * mod.selectedChallenge.NewWeaponCostMult;
                 mod.rareChance = 0;
                 mod.epicChance = 75;
                 mod.legendaryChance = 98;
@@ -1318,19 +1310,19 @@ public class AncientMonkey : BloonsTD6Mod
                 mod.legendaryStrongChance = 95;
                 mod.exoticStrongChance = 100;
                 mod.godlyStrongerChance = 100;
-                mod.strongerWeaponCost = 950;
-                mod.baseStrongerWeaponCost = 750;
-                mod.newAbilityCost = 4500;
+                mod.strongerWeaponCost = 950 * mod.selectedChallenge.StrongerWeaponCostMult;
+                mod.baseStrongerWeaponCost = 750 * mod.selectedChallenge.StrongerWeaponCostMult;
+                mod.newAbilityCost = 4500 * mod.selectedChallenge.AbilityWeaponCostMult;
 
-                mod.baseNewAbilityCost = 1000;
+                mod.baseNewAbilityCost = 1000 * mod.selectedChallenge.AbilityWeaponCostMult;
                 mod.level += 1;
                 mod.newWeaponSlot += 1;
                 mod.strongWeaponSlot += 1;
                 mod.abilitySlot += 1;
-                mod.minNewWeaponRarity = WeaponTemplate.Rarity.Rare;
-                mod.maxNewWeaponRarity = WeaponTemplate.Rarity.Godly;
-                mod.minStrongWeaponRarity = WeaponTemplate.Rarity.Rare;
-                mod.maxStrongWeaponRarity = WeaponTemplate.Rarity.Godly;
+                mod.minNewWeaponRarity = mod.selectedChallenge.MinURarity;
+                mod.maxNewWeaponRarity = mod.selectedChallenge.MaxURarity;
+                mod.minStrongWeaponRarity = mod.selectedChallenge.MinURarity;
+                mod.maxStrongWeaponRarity = mod.selectedChallenge.MaxURarity;
                 mod.panelOpen = false;
                 if (mod.upgradeOpen == true)
                 {

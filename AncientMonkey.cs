@@ -124,7 +124,7 @@ namespace AncientMonkey
     {
         public override TowerSet TowerSet => TowerSet.Primary;
         public override string BaseTower => TowerType.DartMonkey;
-        public override int Cost => 100;
+        public override int Cost => 0;
         public override string DisplayName => "Ancient Monkey";
         public override string Name => "AncientMonkey";
         public override int TopPathUpgrades => 0;
@@ -139,14 +139,7 @@ namespace AncientMonkey
         public override void ModifyBaseTowerModel(TowerModel towerModel)
         {
             var attackModel = towerModel.GetAttackModel();
-            var weapon = attackModel.weapons[0];
-            var projectile = weapon.projectile;
-
-            //towerModel.isSubTower = true;
-            projectile.pierce = 1;
-            attackModel.range = 30;
-            towerModel.range = 30;
-            weapon.rate = 2.5f;
+            towerModel.RemoveBehavior(attackModel);
         }
     }
 

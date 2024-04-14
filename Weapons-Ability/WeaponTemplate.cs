@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BTD_Mod_Helper.Api;
+using Il2CppAssets.Scripts.Models.Towers.Behaviors.Attack;
 using Il2CppAssets.Scripts.Simulation.Towers;
 
 namespace AncientMonkey
@@ -28,5 +29,6 @@ namespace AncientMonkey
         }
         public virtual bool IsCamo { get; }
         public virtual bool IsLead { get; }
+        public List<AttackModel> attackModelList = new List<AttackModel>();
     }
 }

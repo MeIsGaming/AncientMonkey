@@ -28,6 +28,7 @@ using Il2CppAssets.Scripts.Simulation.Towers.Weapons.Behaviors;
 using Il2CppAssets.Scripts.Models.Towers.Weapons.Behaviors;
 using Il2CppAssets.Scripts.Models.Towers.Mutators;
 using Il2CppAssets.Scripts.Models.GenericBehaviors;
+using Il2CppAssets.Scripts.Models.Towers.Behaviors.Abilities.Behaviors;
 
 namespace AncientMonkey.Weapons
 {
@@ -119,18 +120,6 @@ namespace AncientMonkey.Weapons
         {
             var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
             var ab = Game.instance.model.GetTowerFromId("MonkeySub-040").GetAbility().Duplicate();
-            towerModel.AddBehavior(ab);
-            tower.UpdateRootModel(towerModel);
-        }
-    }
-    public class EliteSniper : AbilityTemplate
-    {
-        public override string AbilityName => "Elite Sniper";
-        public override string Icon => VanillaSprites.EliteSniperUpgradeIcon;
-        public override void EditTower(Tower tower)
-        {
-            var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
-            var ab = Game.instance.model.GetTowerFromId("SniperMonkey-050").GetAbility().Duplicate();
             towerModel.AddBehavior(ab);
             tower.UpdateRootModel(towerModel);
         }

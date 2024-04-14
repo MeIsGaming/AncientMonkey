@@ -13,6 +13,7 @@ using Il2CppAssets.Scripts.Simulation.Towers;
 using Il2CppAssets.Scripts.Unity;
 using UnityEngine;
 using Il2CppAssets.Scripts.Models.Towers.Behaviors.Attack.Behaviors;
+using System.Diagnostics;
 
 namespace AncientMonkey.Weapons
 {
@@ -154,54 +155,6 @@ namespace AncientMonkey.Weapons
             tower.UpdateRootModel(towerModel);
         }
     }
-    public class Obyn : WeaponTemplate
-    {
-        public override int SandboxIndex => 1;
-        public override Rarity WeaponRarity => Rarity.Common;
-        public override string Icon => VanillaSprites.ObynGreenFootIcon;
-        public override string WeaponName => "Obyn";
-        public override bool IsLead => true;
-        public override void EditTower(Tower tower)
-        {
-            var wpn = Game.instance.model.GetTowerFromId("ObynGreenfoot").GetAttackModel().Duplicate();
-            wpn.range = tower.towerModel.range;
-            var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
-            towerModel.AddBehavior(wpn);
-            tower.UpdateRootModel(towerModel);
-        }
-    }
-    public class Sauda : WeaponTemplate
-    {
-        public override int SandboxIndex => 1;
-        public override Rarity WeaponRarity => Rarity.Common;
-        public override string Icon => VanillaSprites.SaudaIcon;
-        public override string WeaponName => "Sauda";
-        public override bool IsCamo => true;
-        public override void EditTower(Tower tower)
-        {
-            var wpn = Game.instance.model.GetTowerFromId("Sauda").GetAttackModel().Duplicate();
-            wpn.range = tower.towerModel.range;
-            var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
-            towerModel.AddBehavior(wpn);
-            tower.UpdateRootModel(towerModel);
-        }
-    }
-    public class Gwendolin : WeaponTemplate
-    {
-        public override int SandboxIndex => 1;
-        public override Rarity WeaponRarity => Rarity.Common;
-        public override string Icon => VanillaSprites.GwendolinIcon;
-        public override string WeaponName => "Gwendolin";
-        public override bool IsLead => true;
-        public override void EditTower(Tower tower)
-        {
-            var wpn = Game.instance.model.GetTowerFromId("Gwendolin").GetAttackModel().Duplicate();
-            wpn.range = tower.towerModel.range;
-            var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
-            towerModel.AddBehavior(wpn);
-            tower.UpdateRootModel(towerModel);
-        }
-    }
     public class Ezili : WeaponTemplate
     {
         public override int SandboxIndex => 1;
@@ -287,30 +240,6 @@ namespace AncientMonkey.Weapons
             tower.UpdateRootModel(towerModel);
         }
     }
-    public class HeliPilot : WeaponTemplate
-    {
-        public override int SandboxIndex => 1;
-        public override Rarity WeaponRarity => Rarity.Common;
-        public override string WeaponName => "Heli Pilot";
-        public override string Icon => VanillaSprites.FasterDartsUpgradeIcon;
-        public override void EditTower(Tower tower)
-        {
-            var phoenix = Game.instance.model.GetTowerFromId("WizardMonkey-050").GetBehavior<TowerCreateTowerModel>().Duplicate();
-            var heli = Game.instance.model.GetTowerFromId("HeliPilot").GetBehavior<AirUnitModel>().Duplicate();
-            var wpn = Game.instance.model.GetTowerFromId("HeliPilot").GetBehavior<AttackModel>().Duplicate();
-            var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
-            heli.AddBehavior(wpn);
-            phoenix.towerModel.ApplyDisplay<blankdisplay.BlankDisplay>();
-            phoenix.towerModel.RemoveBehavior<AttackModel>();
-            phoenix.towerModel.RemoveBehavior<PathMovementFromScreenCenterModel>();
-            phoenix.towerModel.RemoveBehavior<CreateEffectOnPlaceModel>();
-            phoenix.towerModel.RemoveBehavior<Il2CppAssets.Scripts.Models.Towers.Behaviors.CreateEffectOnExpireModel>();
-            phoenix.towerModel.AddBehavior(heli);
-
-            towerModel.AddBehavior(phoenix);
-            tower.UpdateRootModel(towerModel);
-        }
-    }
     public class Acid : WeaponTemplate
     {
         public override int SandboxIndex => 1;
@@ -343,6 +272,7 @@ namespace AncientMonkey.Weapons
             wpn.AddBehavior(new TargetCloseModel("targetclose", false, false));
             wpn.AddBehavior(new TargetFirstModel("targetfirst", false, false));
             wpn.AddBehavior(new TargetLastModel("targetlast", false, false));
+           
             towerModel.AddBehavior(wpn);
             tower.UpdateRootModel(towerModel);
         }

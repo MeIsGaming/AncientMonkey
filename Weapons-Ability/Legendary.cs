@@ -271,24 +271,6 @@ namespace AncientMonkey.Weapons
                 tower.UpdateRootModel(towerModel);
             }
         }
-        public class GlaiveLord : WeaponTemplate
-        {
-            public override int SandboxIndex => 4;
-            public override Rarity WeaponRarity => Rarity.Legendary;
-            public override string Icon => VanillaSprites.GlaiveLordUpgradeIcon;
-            public override string WeaponName => "Glaive lord";
-            public override bool IsCamo => true;
-            public override bool IsLead => true;
-            public override void EditTower(Tower tower)
-            {
-                var orbit = Game.instance.model.GetTowerFromId("BoomerangMonkey-520").GetBehavior<OrbitModel>().Duplicate();
-                var wpn = Game.instance.model.GetTowerFromId("BoomerangMonkey-520").GetAttackModel().Duplicate();
-                var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
-                towerModel.AddBehavior(orbit);
-                towerModel.AddBehavior(wpn);
-                tower.UpdateRootModel(towerModel);
-            }
-        }
         public class SpiritOfTheForest : WeaponTemplate
         {
             public override int SandboxIndex => 4;

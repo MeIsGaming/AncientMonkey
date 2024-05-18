@@ -26,9 +26,14 @@ namespace AncientMonkey
             Legendary,
             Exotic,
             Godly,
+            Omega,
         }
         public virtual bool IsCamo { get; }
         public virtual bool IsLead { get; }
+        public virtual bool IsModded { get; }
+        public virtual string ModName { get; }
+
+
         public List<AttackModel> attackModelList = new List<AttackModel>();
     }
 }

@@ -105,6 +105,7 @@ using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
 using Il2CppAssets.Scripts.Models.Towers.Projectiles;
 using Il2CppSystem.IO;
 using AncientMonkey;
+using Il2CppAssets.Scripts.Simulation.SimulationBehaviors;
 
 namespace blankdisplay
 {
@@ -142,5 +143,18 @@ namespace AncientMonkey
             towerModel.RemoveBehavior(attackModel);
         }
     }
-
+    [HarmonyPatch(typeof(Il2CppAssets.Scripts.Simulation.SimulationBehaviors.NecroData), nameof(NecroData.RbePool))]
+    internal static class Necro_RbePool
+    {
+        [HarmonyPrefix]
+        private static bool Postfix(NecroData __instance, ref int __result)
+        {
+            var tower = __instance.tower;
+            if (tower.towerModel.name.Contains("Ancient"))
+            {
+                __result = 9999;
+            }
+            return false;
+        }
+    }
 }

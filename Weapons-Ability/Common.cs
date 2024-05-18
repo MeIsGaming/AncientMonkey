@@ -14,6 +14,9 @@ using Il2CppAssets.Scripts.Unity;
 using UnityEngine;
 using Il2CppAssets.Scripts.Models.Towers.Behaviors.Attack.Behaviors;
 using System.Diagnostics;
+using Il2Cpp;
+using Il2CppAssets.Scripts.Models.Towers.Behaviors.Emissions;
+using Il2CppAssets.Scripts.Models.Towers.Projectiles.Behaviors;
 
 namespace AncientMonkey.Weapons
 {
